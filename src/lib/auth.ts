@@ -208,7 +208,7 @@ export async function loginWithPassword(
 
   return {
     ok: true,
-    user: { id: account.id, displayName: "SiteSeva User", roles },
+    user: { id: account.id, displayName: profile.rows[0]?.display_name ?? "User", roles },
     redirectTo: input.portal === "super-admin" ? "/super-admin" : "/dashboard",
   };
 }
