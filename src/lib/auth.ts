@@ -141,6 +141,10 @@ export async function loginWithPassword(
       [account.id],
     );
     roles = roleResult.rows.map((row) => row.role_key);
+    const profile = await client.query<{ display_name: string }>(
+      "SELECT display_name FROM app_users WHERE id = $1",
+      [account.id],
+    );
 
     const hasSuperAdmin = roles.includes("SUPER_ADMIN");
     const portalAllowed = input.portal === "super-admin"
