@@ -9,6 +9,15 @@ A new, independent construction operations and marketplace platform.
 - Dedicated Neon project/database: `siteseva-platform` / `siteseva_db`
 - No shared authentication, database, API credentials, or environment secrets with other projects.
 
+## Provisioned resources
+
+- Vercel project ID: `prj_CbDcfQQfb7uvmQGUg1uc3jSjIERO`
+- Neon project ID: `icy-term-73456502`
+- Neon production branch: `br-gentle-tree-big8tydn`
+- Neon database: `siteseva_db`
+- Runtime database role: `siteseva_app` (restricted read/write; no role/database administration)
+- Database-owner migration URL is limited to Vercel Development only; production and preview use the restricted runtime role.
+
 ## Security-first build order
 
 1. Server-side authentication and revocable sessions.
