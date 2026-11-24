@@ -128,6 +128,8 @@ export async function loginWithPassword(
   const sessionId = randomUUID();
   const expiresAt = new Date(Date.now() + SESSION_TTL_SECONDS * 1000);
   let roles: string[] = [];
+  let displayName = "User";
+  let mfaEnabled = false;
 
   try {
     await client.query("BEGIN");
@@ -145,10 +147,12 @@ export async function loginWithPassword(
       "SELECT display_name, mfa_enabled FROM app_users WHERE id = $1",
       [account.id],
     );
+    displayName = profile.rows[0]?.display_name ?? "User";
+    mfaEnabled = profile.rows[0]?.mfa_enabled === true;
 
     const hasSuperAdmin = roles.includes("SUPER_ADMIN");
     const portalAllowed = input.portal === "super-admin"
-      ? hasSuperAdmin && profile.rows[0]?.mfa_enabled === true
+      ? hasSuperAdmin && mfaEnabled
       : roles.length > 0 && !hasSuperAdmin;
 
     if (!portalAllowed) {
@@ -210,7 +214,7 @@ export async function loginWithPassword(
 
   return {
     ok: true,
-    user: { id: account.id, displayName: profile.rows[0]?.display_name ?? "User", roles },
+    user: { id: account.id, displayName, roles },
     redirectTo: input.portal === "super-admin" ? "/super-admin" : "/dashboard",
   };
 }
