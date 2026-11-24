@@ -7,3 +7,16 @@ main { max-width: 960px; margin: 0 auto; padding: 48px 24px; }
 h1 { margin: 12px 0; font-size: clamp(32px, 5vw, 48px); letter-spacing: -.04em; }
 p { color: #52627a; line-height: 1.65; }
 .status { display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 12px; background: #fff4db; color: #805500; font-size: 13px; font-weight: 700; }
+
+.login-panel { max-width: 520px; margin: 6vh auto 0; }
+.login-form { display: grid; gap: 10px; margin-top: 26px; }
+.login-form label { color: #27354a; font-size: 14px; font-weight: 700; margin-top: 8px; }
+.login-form input { width: 100%; border: 1px solid #cfd7e4; border-radius: 10px; padding: 14px; font: inherit; background: #fff; color: #172033; }
+.login-form input:focus { outline: 3px solid rgba(40, 100, 200, .18); border-color: #386ac4; }
+button { border: 0; border-radius: 10px; padding: 14px 18px; background: #173f7a; color: white; font: inherit; font-weight: 700; cursor: pointer; margin-top: 12px; }
+button:disabled { opacity: .6; cursor: wait; }
+button.secondary { background: #e8edf5; color: #23334b; }
+.error { color: #a32626; background: #fff0f0; border: 1px solid #ffd5d5; border-radius: 10px; padding: 10px 12px; }
+.small-note { font-size: 12px; margin-top: 20px; }
+.portal-link { max-width: 520px; margin: 14px auto; text-align: center; font-size: 14px; }
+.portal-link a { color: #173f7a; font-weight: 700; text-decoration: none; }
