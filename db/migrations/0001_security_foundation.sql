@@ -54,7 +54,7 @@ CREATE TABLE app_org_memberships (
 CREATE TABLE app_user_roles (
   user_id uuid NOT NULL REFERENCES app_users(id) ON DELETE RESTRICT,
   role_id uuid NOT NULL REFERENCES app_roles(id) ON DELETE RESTRICT,
-  organization_id uuid REFERENCES app_organizations(id) ON DELETE RESTRICT,
+  organization_id uuid NOT NULL REFERENCES app_organizations(id) ON DELETE RESTRICT,
   granted_by uuid REFERENCES app_users(id) ON DELETE RESTRICT,
   granted_at timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (user_id, role_id, organization_id)
