@@ -141,14 +141,14 @@ export async function loginWithPassword(
       [account.id],
     );
     roles = roleResult.rows.map((row) => row.role_key);
-    const profile = await client.query<{ display_name: string }>(
-      "SELECT display_name FROM app_users WHERE id = $1",
+    const profile = await client.query<{ display_name: string; mfa_enabled: boolean }>(
+      "SELECT display_name, mfa_enabled FROM app_users WHERE id = $1",
       [account.id],
     );
 
     const hasSuperAdmin = roles.includes("SUPER_ADMIN");
     const portalAllowed = input.portal === "super-admin"
-      ? hasSuperAdmin
+      ? hasSuperAdmin && profile.rows[0]?.mfa_enabled === true
       : roles.length > 0 && !hasSuperAdmin;
 
     if (!portalAllowed) {
@@ -161,7 +161,9 @@ export async function loginWithPassword(
         ok: false,
         status: 403,
         message: input.portal === "super-admin"
-          ? "इस खाते को Super Admin प्रवेश की अनुमति नहीं है।"
+          ? (hasSuperAdmin
+              ? "Super Admin लॉगिन से पहले Multi-Factor Authentication (MFA) सक्रिय होना जरूरी है।"
+              : "इस खाते को Super Admin प्रवेश की अनुमति नहीं है।")
           : "Super Admin के लिए अलग प्रवेश लिंक इस्तेमाल करें।",
       };
     }
