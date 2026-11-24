@@ -11,6 +11,7 @@ export default function Home() {
           इससे जुड़ा नहीं है।
         </p>
         <p>अगला चरण: सुरक्षित पहचान सत्यापन, अलग Super Admin प्रवेश, भूमिका-आधारित अनुमति और ऑडिट लॉग।</p>
+        <p><a href="/login">यूजर लॉगिन</a>　|　<a href="/super-admin/login">Company Super Admin लॉगिन</a></p>
       </section>
     </main>
   );
