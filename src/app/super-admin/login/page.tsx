@@ -5,7 +5,9 @@ export default function SuperAdminLoginPage() {
     <LoginForm
       endpoint="/api/super-admin/auth/login"
       heading="Company Super Admin"
+      headingEn="Company Super Admin"
       description="यह अलग और प्रतिबंधित Super Admin प्रवेश है। पासवर्ड के साथ Authenticator ऐप का कोड भी जरूरी है।"
+      descriptionEn="Restricted company administrator access. Your password and Authenticator app code are both required."
       mfaRequired
     />
   );
