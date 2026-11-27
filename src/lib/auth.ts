@@ -227,8 +227,8 @@ export async function loginWithPassword(
     await client.query(
       `INSERT INTO app_audit_logs
         (actor_user_id, actor_role_key, action, target_type, target_id, outcome, details)
-       VALUES ($1, $2, 'AUTH_LOGIN', 'USER', $1, 'SUCCESS', '{}'::jsonb)`,
-      [account.id, roles.includes("SUPER_ADMIN") ? "SUPER_ADMIN" : roles[0]],
+       VALUES ($1, $2, 'AUTH_LOGIN', 'USER', $3, 'SUCCESS', '{}'::jsonb)`,
+      [account.id, roles.includes("SUPER_ADMIN") ? "SUPER_ADMIN" : roles[0], account.id],
     );
     await client.query("COMMIT");
   } catch {
