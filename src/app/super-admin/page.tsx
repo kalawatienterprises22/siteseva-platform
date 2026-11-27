@@ -17,15 +17,15 @@ export default async function SuperAdminPage() {
     await client.query("BEGIN");
     await client.query("SELECT set_config('app.user_id', $1, true)", [user.id]);
     const [listings, tenders, workers, reports] = await Promise.all([
-      client.query("SELECT id,title,category,location_text FROM marketplace_listings WHERE status='PENDING' ORDER BY created_at LIMIT 50"),
-      client.query("SELECT id,title,category,location_text FROM tenders WHERE status='PENDING' ORDER BY created_at LIMIT 50"),
-      client.query("SELECT id,full_name,worker_type,phone,service_area FROM worker_profiles WHERE verification_status='PENDING' ORDER BY created_at LIMIT 50"),
+      client.query<{ id: string; title: string; category: string; location_text: string }>("SELECT id,title,category,location_text FROM marketplace_listings WHERE status='PENDING' ORDER BY created_at LIMIT 50"),
+      client.query<{ id: string; title: string; category: string; location_text: string }>("SELECT id,title,category,location_text FROM tenders WHERE status='PENDING' ORDER BY created_at LIMIT 50"),
+      client.query<{ id: string; full_name: string; worker_type: string; phone: string; service_area: string | null }>("SELECT id,full_name,worker_type,phone,service_area FROM worker_profiles WHERE verification_status='PENDING' ORDER BY created_at LIMIT 50"),
       client.query("SELECT COALESCE(sum(running_hours),0)::numeric AS running_hours, COALESCE(sum(diesel_litres),0)::numeric AS diesel, COALESCE(sum(breakdown_hours),0)::numeric AS breakdown, count(DISTINCT work_date)::int AS work_days FROM work_logs"),
     ]);
     items = [
-      ...listings.rows.map((r: any) => ({ id: r.id, title: r.title, detail: r.category + " · " + r.location_text, kind: "listing" as const })),
-      ...tenders.rows.map((r: any) => ({ id: r.id, title: r.title, detail: r.category + " · " + r.location_text, kind: "tender" as const })),
-      ...workers.rows.map((r: any) => ({ id: r.id, title: r.full_name, detail: r.worker_type + " · " + r.phone + (r.service_area ? " · " + r.service_area : ""), kind: "worker" as const })),
+      ...listings.rows.map((r) => ({ id: r.id, title: r.title, detail: r.category + " · " + r.location_text, kind: "listing" as const })),
+      ...tenders.rows.map((r) => ({ id: r.id, title: r.title, detail: r.category + " · " + r.location_text, kind: "tender" as const })),
+      ...workers.rows.map((r) => ({ id: r.id, title: r.full_name, detail: r.worker_type + " · " + r.phone + (r.service_area ? " · " + r.service_area : ""), kind: "worker" as const })),
     ];
     totals = {
       listings: listings.rowCount ?? 0, tenders: tenders.rowCount ?? 0, workers: workers.rowCount ?? 0,
