@@ -21,7 +21,7 @@ function base32Encode(input: Buffer): string {
   return output;
 }
 function base32Decode(input: string): Buffer {
-  const clean = input.toUpperCase().replace(/=+$/,"").replace(/\s/g,"");
+  const clean = input.toUpperCase().replace(/=+$/, "").replace(/\s/g, "");
   let bits = 0, value = 0;
   const output: number[] = [];
   for (const char of clean) {
@@ -37,9 +37,12 @@ function base32Decode(input: string): Buffer {
   return Buffer.from(output);
 }
 export function generateTotpSecret(): string {
-  return base32Encode(randomBytes(20));
+  const secret = base32Encode(randomBytes(20));
+  if (!/^[A-Z2-7]{32}$/.test(secret)) throw new Error("Generated TOTP secret is not valid Base32");
+  return secret;
 }
 export function encryptTotpSecret(secret: string) {
+  if (!/^[A-Z2-7]{32}$/.test(secret)) throw new Error("Invalid TOTP secret format");
   const iv = randomBytes(12);
   const cipher = createCipheriv("aes-256-gcm", encryptionKey(), iv);
   const ciphertext = Buffer.concat([cipher.update(secret, "utf8"), cipher.final()]);
