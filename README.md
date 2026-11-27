@@ -1,40 +1,48 @@
 # SiteSeva Platform
 
-A new, independent construction operations and marketplace platform.
+An independent construction marketplace and site-operations platform.
 
-## Isolation commitments
+## Isolated resources
 
-- Dedicated GitHub repository: `kalawatienterprises22/siteseva-platform`
-- Dedicated Vercel project: `siteseva-platform`
-- Dedicated Neon project/database: `siteseva-platform` / `siteseva_db`
-- No shared authentication, database, API credentials, or environment secrets with other projects.
-
-## Provisioned resources
-
-- Vercel project ID: `prj_CbDcfQQfb7uvmQGUg1uc3jSjIERO`
-- Neon project ID: `icy-term-73456502`
+- GitHub repository: `kalawatienterprises22/siteseva-platform`
+- Vercel project: `siteseva-platform` (`prj_CbDcfQQfb7uvmQGUg1uc3jSjIERO`)
+- Neon project: `icy-term-73456502`
 - Neon production branch: `br-gentle-tree-big8tydn`
-- Neon database: `siteseva_db`
-- Runtime database role: `siteseva_app` (restricted read/write; no role/database administration)
-- Database-owner migration URL is limited to Vercel Development only; production and preview use the restricted runtime role.
+- Database: `siteseva_db`
+- Runtime role: `siteseva_app` (restricted; no role/database administration)
 
-## Security-first build order
+This project must not share code, data, credentials, authentication, or deployment settings with SuperPay/Paykassma or ParixBet. The previous SiteSeva backup must remain untouched until a deliberate cutover.
 
-1. Server-side authentication and revocable sessions.
-2. Separate Super Admin route and mandatory MFA.
-3. Server-enforced role and record-level authorization.
-4. Audit history for privileged actions.
-5. Input validation, rate limits, secure headers, and abuse controls.
-6. Backups, recovery drills, and production security testing.
+## Current implementation status
+
+Implemented foundation:
+- First Company Super Admin provisioned and verified.
+- Separate user and Super Admin login routes.
+- Mandatory TOTP MFA for Super Admin login.
+- Revocable server-side sessions and logout.
+- Login throttling, role checks, audit log, and PostgreSQL row-level security.
+- Public marketplace read APIs and authenticated write APIs for listings, tenders, quotations, worker profiles, and work logs.
+- Super Admin moderation queue and basic operational totals.
+- Hindi/English login selection and partial Super Admin dashboard localization.
+
+Not yet a complete production marketplace:
+- Public registration and approval/onboarding flows are not implemented.
+- Role-specific Contractor, Machine Owner, Driver, Operator, Supervisor, and Public User dashboards are not implemented.
+- GST verification and organization/member administration are incomplete.
+- Listing photo upload/storage is not implemented.
+- WhatsApp notifications are not implemented.
+- Full operational reports and exports are not implemented.
+- Automated tenant-isolation, authorization, CSRF, recovery, and production security tests remain.
+- The privacy policy still needs the operator's registered legal name, postal address, and monitored privacy contact.
+
+## Launch policy
+
+The current `launch-foundation` branch is a preview foundation, not a complete production release. Do not promote it as a full public marketplace or onboard real users until the remaining launch blockers are completed and verified. A limited public information-site launch may be considered separately, with registration and unfinished workflows clearly unavailable.
 
 ## Local development
 
 1. Copy `.env.example` to `.env.local`.
-2. Set the independent SiteSeva database URL and secrets locally.
+2. Set independent SiteSeva environment values.
 3. Run `npm install`, then `npm run dev`.
 
 Never commit real secrets. Production secrets belong only in the SiteSeva Vercel project's encrypted environment variables.
-
-## Important
-
-This is the initial application foundation, not a production-ready authentication system. Do not onboard real users or store business data until authentication, authorization, backups, and security tests are complete.
