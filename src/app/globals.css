@@ -64,3 +64,9 @@ button.secondary { background: #e8edf5; color: #23334b; }
 
 .login-topline{display:flex;align-items:center;justify-content:space-between;gap:12px}.language-switch{display:flex;gap:4px;padding:4px;background:#eef2f7;border-radius:11px}.language-option{margin:0!important;padding:8px 11px!important;background:transparent!important;color:#42516a!important;border-radius:8px!important;font-size:12px!important}.language-option.active{background:#173f7a!important;color:#fff!important}.login-form button[type=submit]{margin-top:12px}
 @media(max-width:420px){.login-topline{align-items:flex-start;flex-direction:column}.language-switch{align-self:flex-end}}
+
+/* Form controls and status messages for registration and role workspaces. */
+.login-form select,.login-form textarea{width:100%;border:1px solid #cfd7e4;border-radius:10px;padding:14px;font:inherit;background:#fff;color:#172033}
+.login-form select:focus,.login-form textarea:focus{outline:3px solid rgba(40,100,200,.18);border-color:#386ac4}
+.success{color:#166534;background:#ecfdf3;border:1px solid #bbf7d0;border-radius:10px;padding:10px 12px}
+.role-workspace .panel h2{margin-top:6px}

@@ -1,0 +1,1 @@
+CREATE POLICY registration_request_ip_rate_limit ON app_registration_requests FOR SELECT TO siteseva_app USING (ip_fingerprint = current_setting('app.registration_ip_fingerprint', true));
