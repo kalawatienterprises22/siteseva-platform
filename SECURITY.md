@@ -19,9 +19,9 @@
 
 ## Production launch blockers
 
-- Public user registration, verification, and approval workflow.
-- Server-side organization creation and membership management, including GST verification for contractors.
-- Complete role-specific dashboards and end-to-end workflow tests for Contractor, Machine Owner, Driver, Operator, Supervisor, and Public User.
+- Registration request intake is implemented with password hashing, hashed-IP rate limiting, GSTIN format validation for contractor types, and Super Admin approval. Phone OTP and GST portal verification are not integrated; manual verification is required.
+- Approval creates the account, organization membership, role assignment, and initial worker profile where applicable. Full organization/member administration remains incomplete.
+- Role workspaces provide initial listing, tender, work-log, and public browsing workflows; end-to-end tests for every role remain.
 - Record-level tenant-isolation tests for every business API, including cross-organization IDOR attempts.
 - Consistent CSRF/origin validation on every state-changing endpoint.
 - Automated tests for role escalation, session revocation, brute force, input validation, and moderation authorization.

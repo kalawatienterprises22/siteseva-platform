@@ -26,18 +26,19 @@ Implemented foundation:
 - Hindi/English login selection and partial Super Admin dashboard localization.
 
 Not yet a complete production marketplace:
-- Public registration and approval/onboarding flows are not implemented.
-- Role-specific Contractor, Machine Owner, Driver, Operator, Supervisor, and Public User dashboards are not implemented.
-- GST verification and organization/member administration are incomplete.
+- Public registration request intake and manual Super Admin approval are implemented; Contractor and Labour Contractor requests require GSTIN format validation.
+- Basic role workspaces support machinery listing, tender submission, site work-log entry, and public marketplace browsing according to account role.
+- SMS OTP and automated GST portal verification are not connected; mobile and GST documents require manual checking before approval.
+- Full organization/member administration and dedicated role-specific panels remain incomplete.
 - Listing photo upload/storage is not implemented.
 - WhatsApp notifications are not implemented.
-- Full operational reports and exports are not implemented.
+- Full operational reports, exports, and breakdown analytics are not implemented.
 - Automated tenant-isolation, authorization, CSRF, recovery, and production security tests remain.
 - The privacy policy still needs the operator's registered legal name, postal address, and monitored privacy contact.
 
 ## Launch policy
 
-The current `launch-foundation` branch is a preview foundation, not a complete production release. Do not promote it as a full public marketplace or onboard real users until the remaining launch blockers are completed and verified. A limited public information-site launch may be considered separately, with registration and unfinished workflows clearly unavailable.
+The current `launch-foundation` branch is a tested preview foundation, not a complete production release. Do not promote it as a complete public marketplace or onboard real users until legal contact details, manual verification procedures, role workflows, backups, and security tests are completed. Registration requests must remain subject to manual Super Admin review.
 
 ## Local development
 
