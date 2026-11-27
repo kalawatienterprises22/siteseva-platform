@@ -11,8 +11,14 @@ function createPool(): Pool {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("DATABASE_URL is not configured");
 
+  const parsedUrl = new URL(connectionString);
+  const sslMode = parsedUrl.searchParams.get("sslmode");
+  if (sslMode && ["prefer", "require", "verify-ca"].includes(sslMode)) {
+    parsedUrl.searchParams.set("sslmode", "verify-full");
+  }
+
   return new Pool({
-    connectionString,
+    connectionString: parsedUrl.toString(),
     max: 5,
     idleTimeoutMillis: 10_000,
     connectionTimeoutMillis: 5_000,
