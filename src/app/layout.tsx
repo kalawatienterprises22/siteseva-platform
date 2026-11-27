@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SiteSeva",
-  description: "Independent construction operations and marketplace platform",
-  robots: { index: false, follow: false },
+  title: { default: "SiteSeva | Construction Marketplace", template: "%s | SiteSeva" },
+  description: "मशीनरी, टेंडर, कोटेशन और निर्माण साइट ऑपरेशन के लिए SiteSeva प्लेटफॉर्म।",
+  applicationName: "SiteSeva",
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
