@@ -1,0 +1,3 @@
+import Link from "next/link";
+import {SiteFooter,SiteHeader,MobileNavigation} from "@/components/site-chrome";
+export function InfoPage({title,eyebrow,children}:{title:string;eyebrow?:string;children:React.ReactNode}){return <main className="market-page"><SiteHeader/><section className="info-hero"><div className="site-container"><div className="eyebrow">{eyebrow??"SITE SEVA"}</div><h1>{title}</h1></div></section><article className="site-container info-content">{children}<p><Link href="/">← Back to SiteSeva</Link></p></article><SiteFooter/><MobileNavigation/></main>}
