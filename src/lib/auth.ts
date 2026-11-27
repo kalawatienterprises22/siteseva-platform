@@ -55,6 +55,15 @@ function cookieName() {
 
 async function setUserContext(client: PoolClient, userId: string) {
   await client.query("SELECT set_config('app.user_id', $1, true)", [userId]);
+  const role = await client.query<{ allowed: boolean }>(
+    `SELECT EXISTS (
+       SELECT 1 FROM app_user_roles ur
+       JOIN app_roles r ON r.id = ur.role_id
+       WHERE ur.user_id = $1 AND r.role_key = 'SUPER_ADMIN'
+     ) AS allowed`,
+    [userId],
+  );
+  await client.query("SELECT set_config('app.is_super_admin', $1, true)", [role.rows[0]?.allowed ? "true" : "false"]);
 }
 
 export async function loginWithPassword(
