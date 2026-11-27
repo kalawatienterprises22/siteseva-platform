@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
     stage = "AUDIT_LOG_INSERT";
     await client.query(
       `INSERT INTO app_audit_logs(actor_user_id,actor_role_key,action,target_type,target_id,outcome,details)
-       VALUES($1,'SUPER_ADMIN','FIRST_SUPER_ADMIN_BOOTSTRAPPED','USER',$1::text,'SUCCESS','{"mfa":"TOTP"}'::jsonb)`,
-      [userId],
+       VALUES($1,'SUPER_ADMIN','FIRST_SUPER_ADMIN_BOOTSTRAPPED','USER',$2,'SUCCESS','{"mfa":"TOTP"}'::jsonb)`,
+      [userId,userId],
     );
     stage = "BOOTSTRAP_FINALIZE";
     await client.query("UPDATE app_bootstrap_state SET completed=true,completed_at=now() WHERE id=true");
