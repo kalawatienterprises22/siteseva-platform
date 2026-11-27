@@ -120,7 +120,7 @@ export function LoginForm({ endpoint, heading, headingEn, description, descripti
           <input id="password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} minLength={8} maxLength={128} required />
           {mfaRequired ? <>
             <label htmlFor="otp-code">{t.otp}</label>
-            <input id="otp-code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={otpCode} onChange={(event) => setOtpCode(event.target.value.replace(/\\D/g, "").slice(0, 6))} required />
+            <input id="otp-code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={otpCode} onChange={(event) => setOtpCode(event.target.value.replace(/[^0-9]/g, "").slice(0, 6))} required />
           </> : null}
           {error ? <p className="error" role="alert">{error}</p> : null}
           <button type="submit" disabled={busy}>{busy ? t.busy : t.submit}</button>
