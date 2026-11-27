@@ -6,7 +6,7 @@ import { decryptTotpSecret, verifyTotpCode } from "@/lib/totp";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-const schema = z.object({ pendingId: z.string().uuid(), code: z.string().regex(/^\d{6}$/) });
+const schema = z.object({ pendingId: z.string().uuid(), code: z.string().regex(/^\\d{6}$/) });
 function sameOrigin(request: NextRequest) {
   const origin = request.headers.get("origin"), host = request.headers.get("host");
   if (!origin || !host) return false;
@@ -65,14 +65,15 @@ export async function POST(request: NextRequest) {
     );
     await client.query(
       `INSERT INTO app_audit_logs(actor_user_id,actor_role_key,action,target_type,target_id,outcome,details)
-       VALUES($1,'SUPER_ADMIN','FIRST_SUPER_ADMIN_BOOTSTRAPPED','USER',$1,'SUCCESS','{"mfa":"TOTP"}'::jsonb)`,
+       VALUES($1,'SUPER_ADMIN','FIRST_SUPER_ADMIN_BOOTSTRAPPED','USER',$1::text,'SUCCESS','{"mfa":"TOTP"}'::jsonb)`,
       [userId],
     );
     await client.query("UPDATE app_bootstrap_state SET completed=true,completed_at=now() WHERE id=true");
     await client.query("DELETE FROM app_admin_bootstrap_pending");
     await client.query("COMMIT");
     return NextResponse.json({ ok: true, message: "Company Super Admin तैयार है। अब अलग Super Admin लॉगिन करें।", redirectTo: "/super-admin/login" }, { headers: { "Cache-Control": "no-store" } });
-  } catch {
+  } catch (error) {
+    console.error("SiteSeva first-admin bootstrap transaction failed", error);
     await client.query("ROLLBACK");
     return NextResponse.json({ error: "पहला Admin सुरक्षित रूप से नहीं बन सका।" }, { status: 503 });
   } finally {
