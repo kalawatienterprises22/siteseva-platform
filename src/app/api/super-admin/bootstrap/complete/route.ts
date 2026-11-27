@@ -6,7 +6,7 @@ import { decryptTotpSecret, verifyTotpCode } from "@/lib/totp";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-const schema = z.object({ pendingId: z.string().uuid(), code: z.string().regex(/^\\d{6}$/) });
+const schema = z.object({ pendingId: z.string().uuid(), code: z.string().regex(/^\d{6}$/) });
 function sameOrigin(request: NextRequest) {
   const origin = request.headers.get("origin"), host = request.headers.get("host");
   if (!origin || !host) return false;
