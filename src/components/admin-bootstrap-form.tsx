@@ -48,7 +48,10 @@ export function AdminBootstrapForm({ initialMobile }: Props) {
         body: JSON.stringify({ pendingId: pending.pendingId, code }),
       });
       const data = await response.json();
-      if (!response.ok) { setError(data.error || "सत्यापन असफल रहा।"); return; }
+      if (!response.ok) {
+        setError([data.error || "सत्यापन असफल रहा।", data.reference || null].filter(Boolean).join(" "));
+        return;
+      }
       window.location.assign(data.redirectTo);
     } catch { setError("नेटवर्क समस्या है।"); }
     finally { setBusy(false); }
