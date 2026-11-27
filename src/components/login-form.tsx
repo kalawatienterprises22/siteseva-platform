@@ -6,11 +6,13 @@ type Props = {
   endpoint: string;
   heading: string;
   description: string;
+  mfaRequired?: boolean;
 };
 
-export function LoginForm({ endpoint, heading, description }: Props) {
+export function LoginForm({ endpoint, heading, description, mfaRequired = false }: Props) {
   const [mobile, setMobile] = useState("+91");
   const [password, setPassword] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -24,7 +26,7 @@ export function LoginForm({ endpoint, heading, description }: Props) {
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
         cache: "no-store",
-        body: JSON.stringify({ mobile: mobile.trim(), password }),
+        body: JSON.stringify({ mobile: mobile.trim(), password, ...(mfaRequired ? { otpCode } : {}) }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -68,6 +70,22 @@ export function LoginForm({ endpoint, heading, description }: Props) {
             maxLength={128}
             required
           />
+          {mfaRequired ? (
+            <>
+              <label htmlFor="otp-code">Authenticator ऐप का 6 अंकों का कोड</label>
+              <input
+                id="otp-code"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                value={otpCode}
+                onChange={(event) => setOtpCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+                required
+              />
+            </>
+          ) : null}
           {error ? <p className="error" role="alert">{error}</p> : null}
           <button type="submit" disabled={busy}>
             {busy ? "जाँच हो रही है…" : "सुरक्षित लॉगिन"}

@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import type { PoolClient } from "pg";
 import { getDb } from "@/lib/db";
+import { decryptTotpSecret, verifyTotpCode } from "@/lib/totp";
 
 const SESSION_TTL_SECONDS = 60 * 60 * 12;
 const MAX_LOGIN_ATTEMPTS = 10;
@@ -68,7 +69,7 @@ async function setUserContext(client: PoolClient, userId: string) {
 
 export async function loginWithPassword(
   request: NextRequest,
-  input: { mobile: string; password: string; portal: Portal },
+  input: { mobile: string; password: string; portal: Portal; otpCode?: string },
 ): Promise<
   | { ok: true; user: { id: string; displayName: string; roles: string[] }; redirectTo: string }
   | { ok: false; status: number; message: string }
@@ -152,14 +153,40 @@ export async function loginWithPassword(
       [account.id],
     );
     roles = roleResult.rows.map((row) => row.role_key);
-    const profile = await client.query<{ display_name: string; mfa_enabled: boolean }>(
-      "SELECT display_name, mfa_enabled FROM app_users WHERE id = $1",
+    const profile = await client.query<{
+      display_name: string;
+      mfa_enabled: boolean;
+      mfa_secret_ciphertext: string | null;
+      mfa_secret_iv: string | null;
+      mfa_secret_tag: string | null;
+    }>(
+      "SELECT display_name, mfa_enabled, mfa_secret_ciphertext, mfa_secret_iv, mfa_secret_tag FROM app_users WHERE id = $1",
       [account.id],
     );
     displayName = profile.rows[0]?.display_name ?? "User";
     mfaEnabled = profile.rows[0]?.mfa_enabled === true;
 
     const hasSuperAdmin = roles.includes("SUPER_ADMIN");
+    if (input.portal === "super-admin" && hasSuperAdmin && mfaEnabled) {
+      const mfa = profile.rows[0];
+      let validCode = false;
+      try {
+        if (input.otpCode && mfa?.mfa_secret_ciphertext && mfa.mfa_secret_iv && mfa.mfa_secret_tag) {
+          const secret = decryptTotpSecret(mfa.mfa_secret_ciphertext, mfa.mfa_secret_iv, mfa.mfa_secret_tag);
+          validCode = verifyTotpCode(secret, input.otpCode);
+        }
+      } catch {
+        validCode = false;
+      }
+      if (!validCode) {
+        await client.query("ROLLBACK");
+        await db.query(
+          "INSERT INTO app_login_attempts (identifier_fingerprint, ip_fingerprint, succeeded) VALUES ($1, $2, false)",
+          [identifierFingerprint, fingerprints.ip],
+        );
+        return { ok: false, status: 401, message: "Authenticator ऐप का 6 अंकों का सही कोड डालें।" };
+      }
+    }
     const portalAllowed = input.portal === "super-admin"
       ? hasSuperAdmin && mfaEnabled
       : roles.length > 0 && !hasSuperAdmin;

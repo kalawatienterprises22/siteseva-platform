@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 const schema = z.object({
   mobile: z.string().trim().regex(/^\+[1-9][0-9]{7,14}$/),
   password: z.string().min(8).max(128),
+  otpCode: z.string().regex(/^\d{6}$/),
 });
 
 export async function POST(request: NextRequest) {
