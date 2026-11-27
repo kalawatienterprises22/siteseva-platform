@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { getCurrentUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { ModerationQueue } from "@/components/moderation-queue";
@@ -6,6 +7,8 @@ import { ModerationQueue } from "@/components/moderation-queue";
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminPage() {
+  const language = (await cookies()).get("siteSevaLanguage")?.value === "en" ? "en" : "hi";
+  const en = language === "en";
   const user = await getCurrentUser();
   if (!user) redirect("/super-admin/login");
   if (!user.roles.includes("SUPER_ADMIN")) redirect("/dashboard");
@@ -38,17 +41,17 @@ export default async function SuperAdminPage() {
   } finally { client.release(); }
 
   return <main className="dashboard-shell">
-    <header className="dashboard-header"><div><div className="eyebrow">SiteSeva · Company Control</div><h1>नमस्ते, {user.displayName}</h1><p>Company Super Admin Dashboard</p></div><form action="/api/auth/logout" method="post"><button className="secondary" type="submit">लॉगआउट</button></form></header>
+    <header className="dashboard-header"><div><div className="eyebrow">SiteSeva · Company Control</div><h1>{en ? "Welcome" : "नमस्ते"}, {user.displayName}</h1><p>Company Super Admin Dashboard</p></div><form action="/api/auth/logout" method="post"><button className="secondary" type="submit">{en ? "Log out" : "लॉगआउट"}</button></form></header>
     <section className="stat-grid">
-      <article className="stat-card"><span>लंबित मशीनरी</span><strong>{totals.listings}</strong></article>
-      <article className="stat-card"><span>लंबित टेंडर</span><strong>{totals.tenders}</strong></article>
-      <article className="stat-card"><span>लंबित वर्कर</span><strong>{totals.workers}</strong></article>
-      <article className="stat-card"><span>साइट पर दर्ज दिन</span><strong>{totals.workDays}</strong></article>
+      <article className="stat-card"><span>{en ? "Pending machinery" : "लंबित मशीनरी"}</span><strong>{totals.listings}</strong></article>
+      <article className="stat-card"><span>{en ? "Pending tenders" : "लंबित टेंडर"}</span><strong>{totals.tenders}</strong></article>
+      <article className="stat-card"><span>{en ? "Pending workers" : "लंबित वर्कर"}</span><strong>{totals.workers}</strong></article>
+      <article className="stat-card"><span>{en ? "Recorded site days" : "साइट पर दर्ज दिन"}</span><strong>{totals.workDays}</strong></article>
     </section>
-    <section className="panel"><div className="section-heading"><div><div className="eyebrow">साइट ऑपरेशन रिपोर्ट</div><h2>कुल संचालन आँकड़े</h2></div></div>
-      <div className="stat-grid report-grid"><article className="stat-card"><span>रनिंग घंटे</span><strong>{totals.runningHours.toLocaleString("en-IN")}</strong></article><article className="stat-card"><span>डीजल (लीटर)</span><strong>{totals.diesel.toLocaleString("en-IN")}</strong></article><article className="stat-card"><span>ब्रेकडाउन घंटे</span><strong>{totals.breakdown.toLocaleString("en-IN")}</strong></article></div>
+    <section className="panel"><div className="section-heading"><div><div className="eyebrow">{en ? "Site operations report" : "साइट ऑपरेशन रिपोर्ट"}</div><h2>{en ? "Overall operation statistics" : "कुल संचालन आँकड़े"}</h2></div></div>
+      <div className="stat-grid report-grid"><article className="stat-card"><span>{en ? "Running hours" : "रनिंग घंटे"}</span><strong>{totals.runningHours.toLocaleString("en-IN")}</strong></article><article className="stat-card"><span>{en ? "Diesel (litres)" : "डीजल (लीटर)"}</span><strong>{totals.diesel.toLocaleString("en-IN")}</strong></article><article className="stat-card"><span>{en ? "Breakdown hours" : "ब्रेकडाउन घंटे"}</span><strong>{totals.breakdown.toLocaleString("en-IN")}</strong></article></div>
     </section>
-    <ModerationQueue items={items} />
-    <section className="panel"><div className="eyebrow">अकाउंट सुरक्षा</div><h2>सुरक्षित Super Admin प्रवेश</h2><p>यह पैनल केवल SUPER_ADMIN भूमिका और MFA-सक्रिय खाते के लिए उपलब्ध है। हर अनुमोदन/अस्वीकृति ऑडिट लॉग में दर्ज होती है।</p></section>
+    <ModerationQueue items={items} language={language} />
+    <section className="panel"><div className="eyebrow">{en ? "Account security" : "अकाउंट सुरक्षा"}</div><h2>{en ? "Secure Super Admin access" : "सुरक्षित Super Admin प्रवेश"}</h2><p>{en ? "This panel is available only to accounts with the SUPER_ADMIN role and MFA enabled. Every approval or rejection is recorded in the audit log." : "यह पैनल केवल SUPER_ADMIN भूमिका और MFA-सक्रिय खाते के लिए उपलब्ध है। हर अनुमोदन/अस्वीकृति ऑडिट लॉग में दर्ज होती है।"}</p></section>
   </main>;
 }
