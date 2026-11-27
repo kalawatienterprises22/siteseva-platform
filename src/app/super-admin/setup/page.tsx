@@ -1,6 +1,7 @@
-import { AdminBootstrapForm } from "@/components/admin-bootstrap-form";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
+
 export default function SuperAdminSetupPage() {
-  return <AdminBootstrapForm initialMobile="+919470340213" />;
+  redirect("/super-admin/login");
 }
