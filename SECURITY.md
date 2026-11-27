@@ -1,30 +1,37 @@
-# SiteSeva Security Baseline
+# SiteSeva Security Status
 
-## Implemented foundation
+## Implemented and verified foundation
 
-- Separate application repository, Vercel project, Neon project and database.
-- Runtime database identity is a restricted `siteseva_app` role; the database-owner URL is limited to the Vercel Development environment for controlled migrations.
+- Separate SiteSeva repository, Vercel project, Neon project, database, and runtime credentials.
+- Runtime database identity is the restricted `siteseva_app` role; the owner role is not configured for production runtime.
 - Parameterized PostgreSQL queries and a server-only database module.
-- Password verification with bcrypt.
-- Opaque random session tokens; only SHA-256 token hashes are stored in PostgreSQL.
-- HttpOnly, SameSite=Lax session cookies; Secure and __Host- prefixed in production.
-- Server-side session validation and explicit session revocation on logout.
-- Common login and Company Super Admin login use different routes and enforce different role rules.
-- Super Admin session creation is blocked until MFA is enabled.
+- Password hashing with bcrypt.
+- Opaque random session tokens; only SHA-256 token hashes are stored.
+- HttpOnly, SameSite=Lax session cookies; Secure and __Host-prefixed in production.
+- Server-side session validation and explicit revocation on logout.
+- Separate common-user and Company Super Admin login routes.
+- TOTP MFA is required for Super Admin login.
 - Login attempt throttling and temporary account lockout.
-- PostgreSQL row-level security on users, roles, memberships, sessions and audit history.
+- PostgreSQL row-level security on identity, membership, session, audit, and marketplace tables.
 - Append-only audit history trigger.
 - Nonce-based Content Security Policy and baseline browser security headers.
-- No real user account is seeded into the database.
+- First Company Super Admin bootstrap completed; repeat setup page now redirects to the Super Admin login page.
 
-## Important remaining work before production
+## Production launch blockers
 
-- Complete MFA enrollment, verification and recovery for Super Admin.
-- Create the first Super Admin using a one-time, expiring bootstrap process.
-- Add server-side permission checks to every business API and record-level tenant checks.
-- Add CSRF protections to every state-changing browser endpoint and test them.
-- Add automated tests for role escalation, tenant isolation, session revocation, brute force, and IDOR.
-- Configure independent off-site database and uploaded-file backups, then perform restore drills.
-- Complete dependency, static analysis, and deployment security review.
+- Public user registration, verification, and approval workflow.
+- Server-side organization creation and membership management, including GST verification for contractors.
+- Complete role-specific dashboards and end-to-end workflow tests for Contractor, Machine Owner, Driver, Operator, Supervisor, and Public User.
+- Record-level tenant-isolation tests for every business API, including cross-organization IDOR attempts.
+- Consistent CSRF/origin validation on every state-changing endpoint.
+- Automated tests for role escalation, session revocation, brute force, input validation, and moderation authorization.
+- Independent off-site database backups and a successful restore drill; uploaded-file backup once file storage is enabled.
+- Dependency audit, lint, typecheck, production build, and deployment security review.
+- Complete and accurate privacy/legal operator details and a monitored privacy contact before public user data collection.
 
-Do not onboard real users or store live business data until the remaining work is completed and the production build is verified.
+## Operational rules
+
+- Never expose database URLs, passwords, MFA seeds, bootstrap tokens, or session secrets in client code or logs.
+- Never use the database-owner role for production application traffic.
+- Keep preview and production secrets separate.
+- Do not onboard real users or store live business data until the launch blockers above are completed and verified.
