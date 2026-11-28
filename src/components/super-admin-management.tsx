@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useState} from "react";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type R=Record<string,any>;
 const tabs=["Overview","Users & Roles","Permissions","Organizations","Machines","Assignments","Driver Entries","Audit Logs"];
 export function SuperAdminManagement(){
@@ -8,7 +9,9 @@ async function load(){const r=await fetch("/api/super-admin/management",{cache:"
 useEffect(()=>{load().catch(e=>E(e.message));},[]);
 async function act(v:R){B(true);E("");try{const r=await fetch("/api/super-admin/management",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(v)});const x=await r.json();if(!r.ok)throw Error(x.error);await load();}catch(e){E(e instanceof Error?e.message:"कार्रवाई विफल");}finally{B(false);}}
 const users=(d.users||[]).filter((u:R)=>[u.display_name,u.mobile_e164,...(u.roles||[])].join(" ").toLowerCase().includes(q.toLowerCase()));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const saveOrg=(e:any,o:R)=>{e.preventDefault();const f=new FormData(e.currentTarget);void act({action:"organization_edit",organizationId:o.id,name:f.get("name"),gstNumber:f.get("gstNumber")||null,businessPhone:f.get("phone")||null,city:f.get("city")||null,district:f.get("district")||null,state:f.get("state")||null,pincode:f.get("pin")||null});};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const saveMachine=(e:any,m:R)=>{e.preventDefault();const f=new FormData(e.currentTarget);void act({action:"listing_edit",listingId:m.id,title:f.get("title"),description:f.get("description"),locationText:f.get("location"),hourlyRate:f.get("hourly")?Number(f.get("hourly")):null,dailyRate:f.get("daily")?Number(f.get("daily")):null});};
 return <div className="admin-management">{err&&<p className="error">{err}</p>}<nav className="admin-tabs">{tabs.map(x=><button className={tab===x?"active":""} key={x} onClick={()=>T(x)}>{x}</button>)}</nav>
 {tab==="Overview"&&<><div className="stat-grid">{[["Users",d.users?.length],["Organizations",d.organizations?.length],["Machines",d.machines?.length],["Pending Entries",d.driverEntries?.filter((x:R)=>x.approval_status==="PENDING").length]].map(x=><article className="stat-card" key={String(x[0])}><span>{x[0]}</span><strong>{x[1]||0}</strong></article>)}</div><section className="panel"><h2>Super Admin Control Centre</h2><p>हर सेक्शन खोलकर रिकॉर्ड देखें, बदलें और अधिकार नियंत्रित करें।</p>{tabs.slice(1).map(x=><button className="secondary admin-jump" key={x} onClick={()=>T(x)}>{x} →</button>)}</section></>}
