@@ -140,3 +140,5 @@ html,body{min-height:100%;scroll-behavior:smooth}body{margin:0;background:#f7f9f
 .admin-portal-bar nav form{margin:0}
 .admin-portal-bar nav button{margin:0;padding:8px 12px;background:#f28c28;color:#fff;border-radius:8px}
 @media(max-width:650px){.admin-portal-bar{align-items:flex-start;flex-direction:column}.admin-portal-bar nav{gap:10px}.admin-portal-bar nav a{font-size:12px}}
+
+.admin-management .panel{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px}.admin-management button{cursor:pointer;border:0;border-radius:8px;padding:10px 13px;background:#f28c28;color:#fff;font-weight:700}.admin-management button:disabled{opacity:.55}.admin-management input,.admin-management select,.admin-management textarea{font:inherit}.admin-management textarea{min-height:75px}
