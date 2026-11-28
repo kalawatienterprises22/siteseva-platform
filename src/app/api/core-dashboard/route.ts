@@ -27,11 +27,11 @@ export async function GET(request:NextRequest){
    ]);
    await c.query("COMMIT"); return NextResponse.json({assignments:assignments.rows,tenders:tenders.rows,workLogs:logs.rows},{headers:{"Cache-Control":"no-store"}});
   }
-  const [profile,assignments,entries]=await Promise.all([
-   c.query("SELECT full_name,worker_type,phone,experience_years,skills,service_area,verification_status FROM worker_profiles WHERE user_id=$1",[user.id]),
-   c.query("SELECT a.id,a.site_name,a.site_location,a.status,a.starts_at,a.ends_at,l.title AS machine_title,l.category,l.make,l.model FROM machine_assignments a JOIN marketplace_listings l ON l.id=a.machine_listing_id WHERE a.driver_user_id=$1 AND a.status IN ('ACTIVE','PLANNED') ORDER BY a.starts_at DESC LIMIT 30",[user.id]),
-   c.query("SELECT e.id,e.assignment_id,e.entry_type,e.entry_at,e.numeric_value,e.notes,e.approval_status,e.review_note FROM driver_activity_entries e WHERE e.driver_user_id=$1 ORDER BY e.entry_at DESC LIMIT 30",[user.id])
-  ]);
+  // A transaction-bound PoolClient must execute queries sequentially.
+  // Running Promise.all on one pg client can queue overlapping queries and slow the dashboard.
+  const profile=await c.query("SELECT full_name,worker_type,phone,experience_years,skills,service_area,verification_status FROM worker_profiles WHERE user_id=$1",[user.id]);
+  const assignments=await c.query("SELECT a.id,a.site_name,a.site_location,a.status,a.starts_at,a.ends_at,l.title AS machine_title,l.category,l.make,l.model FROM machine_assignments a JOIN marketplace_listings l ON l.id=a.machine_listing_id WHERE a.driver_user_id=$1 AND a.status IN ('ACTIVE','PLANNED') ORDER BY a.starts_at DESC LIMIT 30",[user.id]);
+  const entries=await c.query("SELECT e.id,e.assignment_id,e.entry_type,e.entry_at,e.numeric_value,e.notes,e.approval_status,e.review_note FROM driver_activity_entries e WHERE e.driver_user_id=$1 ORDER BY e.entry_at DESC LIMIT 30",[user.id]);
   await c.query("COMMIT"); return NextResponse.json({profile:profile.rows[0]??null,assignments:assignments.rows,entries:entries.rows},{headers:{"Cache-Control":"no-store"}});
  }catch{await c.query("ROLLBACK");return NextResponse.json({error:"Dashboard डेटा अभी उपलब्ध नहीं है।"},{status:503});}finally{c.release();}
 }
