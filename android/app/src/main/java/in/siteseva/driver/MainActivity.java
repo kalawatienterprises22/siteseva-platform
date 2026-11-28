@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
         webView.setBackgroundColor(Color.WHITE);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadsImagesAutomatically(true);
-        webView.getSettings().setUserAgentString(webView.getSettings().getUserAgentString() + " SiteSevaAndroid/0.3.0");
+        webView.getSettings().setUserAgentString(webView.getSettings().getUserAgentString() + " SiteSevaAndroid/0.3.1");
         CookieManager.getInstance().setAcceptCookie(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setDatabaseEnabled(true);
@@ -50,16 +50,17 @@ public class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                // SiteSeva pages stay inside this native app. Only third-party links open externally.
                 Uri uri = request.getUrl();
-                String host = uri.getHost();
-                if ("https".equals(uri.getScheme()) && host != null &&
-                    (host.equals("siteseva-platform-git-launch-foundation-siteseva.vercel.app") ||
-                     (host.endsWith(".vercel.app") && host.startsWith("siteseva-platform-")))) {
+                String scheme = uri.getScheme();
+                // Keep every website navigation and redirect inside the Android app.
+                if ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)) {
                     return false;
                 }
-                if ("https".equals(uri.getScheme()) || "http".equals(uri.getScheme())) {
+                // Non-web actions such as telephone or email may use their Android handler.
+                try {
                     startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                } catch (Exception ignored) {
+                    // Ignore unsupported external schemes rather than crashing the app.
                 }
                 return true;
             }
