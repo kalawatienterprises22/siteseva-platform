@@ -3,7 +3,6 @@ package in.siteseva.driver;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
@@ -24,6 +23,17 @@ public class MainActivity extends Activity {
     private WebView web;
     private ValueCallback<Uri[]> fileCallback;
     private static final int FILE_PICKER = 1001;
+
+    private boolean keepInsideApp(Uri uri) {
+        String scheme = uri.getScheme();
+        if ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)) return true;
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        } catch (Exception ignored) {
+            Toast.makeText(this, "इस लिंक को खोलने के लिए कोई ऐप उपलब्ध नहीं है।", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -65,10 +75,10 @@ public class MainActivity extends Activity {
         CookieManager.getInstance().setAcceptThirdPartyCookies(web, false);
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                Uri uri = request.getUrl();
-                if ("https".equals(uri.getScheme()) && uri.getHost() != null && uri.getHost().endsWith("vercel.app")) return false;
-                startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                return true;
+                return !keepInsideApp(request.getUrl());
+            }
+            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return !keepInsideApp(Uri.parse(url));
             }
             @Override public void onReceivedError(WebView view, android.webkit.WebResourceRequest req, android.webkit.WebResourceError error) {
                 if (req.isForMainFrame()) Toast.makeText(MainActivity.this, "नेटवर्क उपलब्ध नहीं है। इंटरनेट जाँचें।", Toast.LENGTH_LONG).show();
