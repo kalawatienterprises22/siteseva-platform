@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { GlobalLanguageSelector } from "@/components/global-language-selector";
 
 export const metadata: Metadata = {
   title: { default: "SiteSeva | Construction Marketplace", template: "%s | SiteSeva" },
@@ -10,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="hi"><body><GlobalLanguageSelector />{children}</body></html>;
+  return <html lang="hi"><body>{children}</body></html>;
 }
