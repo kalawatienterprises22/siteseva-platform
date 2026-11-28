@@ -1,0 +1,7 @@
+import {redirect} from "next/navigation";
+import Link from "next/link";
+import {getCurrentUser} from "@/lib/auth";
+import {getDb} from "@/lib/db";
+import {MachineListingForm} from "@/components/machine-listing-form";
+export const dynamic="force-dynamic";
+export default async function NewMachineListingPage(){const user=await getCurrentUser();if(!user)redirect("/login");if(!user.roles.some(r=>["MACHINE_OWNER","CONTRACTOR","SUPER_ADMIN"].includes(r)))redirect("/dashboard");const c=await getDb().connect();let orgId="";try{await c.query("BEGIN");await c.query("SELECT set_config('app.user_id',$1,true)",[user.id]);const r=await c.query("SELECT organization_id FROM app_org_memberships WHERE user_id=$1 AND membership_status='ACTIVE' ORDER BY created_at LIMIT 1",[user.id]);orgId=r.rows[0]?.organization_id??"";await c.query("COMMIT");}catch{await c.query("ROLLBACK");}finally{c.release();}if(!orgId)redirect("/dashboard");return <main className="dashboard-shell"><header className="dashboard-header"><div><div className="eyebrow">SITE SEVA · MACHINE LISTING</div><h1>अपनी मशीन लिस्ट करें</h1><p>सभी नई लिस्टिंग पहले Super Admin Review में जाएँगी।</p></div><Link className="secondary" href="/owner">Owner Dashboard</Link></header><section className="panel"><MachineListingForm organizationId={orgId}/></section></main>}
