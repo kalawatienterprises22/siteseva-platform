@@ -251,7 +251,7 @@ export async function loginWithPassword(
   return {
     ok: true,
     user: { id: account.id, displayName, roles },
-    redirectTo: input.portal === "super-admin" ? "/super-admin" : "/dashboard",
+    redirectTo: input.portal === "super-admin" ? "/super-admin" : roles.includes("DRIVER") ? "/driver" : "/dashboard",
   };
 }
 
