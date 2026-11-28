@@ -7,6 +7,7 @@ type Listing={id:string;title:string;category:string;location_text:string;daily_
 type Tender={id:string;title:string;category:string;location_text:string;deadline:Date|null};
 type Worker={id:string;full_name:string;worker_type:string;skills:string[];service_area:string|null;experience_years:string|null};
 const categories:Record<string,{title:string;description:string;icon:string;kind:string;highlights:string[]}>={
+ masonry:{title:"Masonry & Civil Work",description:"Explore skilled masonry work including bricklaying, plastering, blockwork and civil finishing.",icon:"🧱",kind:"labour",highlights:["Bricklaying","Blockwork","Plastering","Mason Teams"]},
  machinery:{title:"Machinery & Equipment",description:"Explore approved equipment listings for construction, roadwork, earthmoving and infrastructure projects.",icon:"🚜",kind:"machinery",highlights:["JCB & Excavators","Crane & Hydra","Dumper & Roller","Mixer & Concrete Equipment"]},
  materials:{title:"Construction Materials",description:"Find suppliers for cement, TMT steel, sand, aggregates, bricks, pipes and RMC.",icon:"🧱",kind:"planned",highlights:["Cement & TMT Steel","Sand & Aggregates","Bricks & Blocks","Pipes & RMC"]},
  labour:{title:"Labour & Manpower",description:"Discover verified worker and operator profiles. Team hiring and wage workflows are planned next.",icon:"👷",kind:"labour",highlights:["Mason & Helpers","Welder & Electrician","Shuttering & Bar Bending","Operators & Drivers"]},
@@ -20,9 +21,10 @@ const categories:Record<string,{title:string;description:string;icon:string;kind
 };
 const categoryPhotos:Record<string,{src:string;alt:string}>={
  machinery:{src:"https://images.pexels.com/photos/40537865/pexels-photo-40537865.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Heavy construction machinery at an active worksite"},
- materials:{src:"https://images.pexels.com/photos/37121406/pexels-photo-37121406.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Workers placing concrete on a construction project"},
- labour:{src:"https://images.pexels.com/photos/10383579/pexels-photo-10383579.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Construction worker at a building site"},
- contractors:{src:"https://images.pexels.com/photos/7507644/pexels-photo-7507644.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Tower crane at a large construction project"},
+ materials:{src:"https://images.pexels.com/photos/11891953/pexels-photo-11891953.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Stacked steel reinforcement bars for construction materials"},
+ labour:{src:"https://images.pexels.com/photos/35106284/pexels-photo-35106284.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Four construction workers digging a foundation trench with hand tools"},
+ masonry:{src:"https://images.pexels.com/photos/10383580/pexels-photo-10383580.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Mason applying mortar to a brick wall with a trowel"},
+ contractors:{src:"https://images.pexels.com/photos/8961522/pexels-photo-8961522.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Construction workers discussing building plans at a site"},
  "tenders-work":{src:"https://images.pexels.com/photos/35767048/pexels-photo-35767048.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Modern high-rise construction project"},
  spares:{src:"https://images.pexels.com/photos/20296265/pexels-photo-20296265.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Excavator equipment at a construction site"},
  transport:{src:"https://images.pexels.com/photos/14475776/pexels-photo-14475776.jpeg?auto=compress&cs=tinysrgb&w=1200",alt:"Heavy dumper truck at a construction site"},
