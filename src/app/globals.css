@@ -130,3 +130,13 @@ html,body{min-height:100%;scroll-behavior:smooth}body{margin:0;background:#f7f9f
 .core-dashboard{display:grid;gap:22px}.core-dashboard .panel{margin-top:18px}.core-dashboard .tender-row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.core-dashboard .tender-row>div:last-child{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.core-dashboard .tender-row button{margin-top:6px}.core-dashboard .login-form{max-width:720px}.coming-soon-card{position:relative;overflow:hidden;isolation:isolate}.coming-soon-card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(20,45,78,.08),rgba(242,140,40,.12));backdrop-filter:blur(3px);z-index:-1}.blur-watermark{position:absolute;right:16px;top:20px;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;letter-spacing:.12em;color:rgba(20,45,78,.08);filter:blur(1.5px);pointer-events:none}.coming-soon-card .badge{display:inline-flex;background:#fff0df;color:#a65308;padding:6px 12px;border-radius:999px;font-weight:800;font-size:.75rem;letter-spacing:.08em}.core-dashboard .stat-grid{margin-bottom:12px}@media(max-width:640px){.core-dashboard .tender-row{align-items:flex-start}.core-dashboard .tender-row>div:last-child{width:100%}.core-dashboard .tender-row button{flex:1}}
 
 .coming-soon-card{background:linear-gradient(115deg,rgba(255,255,255,.88),rgba(242,245,248,.84))}.coming-soon-card:after{content:"";position:absolute;inset:-8px;background-image:url("https://images.pexels.com/photos/35565815/pexels-photo-35565815.jpeg?auto=compress&cs=tinysrgb&w=1200");background-size:cover;background-position:center;filter:blur(7px);opacity:.24;z-index:-2;pointer-events:none}
+
+/* Separate Company Super Admin portal navigation */
+.admin-portal{min-height:100vh;background:#f5f7fb;color:#17212b}
+.admin-portal-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px max(20px,calc((100vw - 1120px)/2));background:#142d4e;color:#fff}
+.admin-portal-bar>strong{font-size:14px;letter-spacing:.04em;white-space:nowrap}
+.admin-portal-bar nav{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.admin-portal-bar nav a{color:#fff;font-size:13px;font-weight:700}
+.admin-portal-bar nav form{margin:0}
+.admin-portal-bar nav button{margin:0;padding:8px 12px;background:#f28c28;color:#fff;border-radius:8px}
+@media(max-width:650px){.admin-portal-bar{align-items:flex-start;flex-direction:column}.admin-portal-bar nav{gap:10px}.admin-portal-bar nav a{font-size:12px}}

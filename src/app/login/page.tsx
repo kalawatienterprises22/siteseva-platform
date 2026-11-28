@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { LoginForm } from "@/components/login-form";
 
 export default function LoginPage() {
@@ -11,7 +10,6 @@ export default function LoginPage() {
         description="कॉन्ट्रैक्टर, मशीन मालिक, ड्राइवर, ऑपरेटर और अन्य स्वीकृत यूजर के लिए।"
         descriptionEn="For contractors, equipment owners, drivers, operators and other approved users."
       />
-      <nav className="portal-link"><Link href="/super-admin/login">Company Super Admin प्रवेश</Link></nav>
     </>
   );
 }

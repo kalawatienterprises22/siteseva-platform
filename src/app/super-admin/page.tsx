@@ -4,7 +4,6 @@ import Link from "next/link";
 import {getCurrentUser} from "@/lib/auth";
 import {getDb} from "@/lib/db";
 import {ModerationQueue} from "@/components/moderation-queue";
-import {SiteFooter,SiteHeader,MobileNavigation} from "@/components/site-chrome";
 export const dynamic="force-dynamic";
 type ListingRow={id:string;title:string;category:string;location_text:string};
 type TenderRow={id:string;title:string;category:string;location_text:string};
@@ -26,11 +25,11 @@ export default async function SuperAdminPage(){
  totals={listings:listings.rowCount??0,tenders:tenders.rowCount??0,workers:workers.rowCount??0,runningHours:Number(reports.rows[0]?.running_hours??0),diesel:Number(reports.rows[0]?.diesel??0),breakdown:Number(reports.rows[0]?.breakdown??0),workDays:Number(reports.rows[0]?.work_days??0)};
  registrationCount=Number(registrations.rows[0]?.count??0);await client.query("COMMIT");
  }catch{await client.query("ROLLBACK");}finally{client.release();}
- return <main className="market-page"><SiteHeader/><div className="dashboard-shell">
- <header className="dashboard-header"><div><div className="eyebrow">SITE SEVA · COMPANY CONTROL</div><h1>{en?"Welcome":"नमस्ते"}, {user.displayName}</h1><p>Company Super Admin Dashboard</p></div><div className="hero-actions"><Link className="secondary" href="/super-admin/management">{en?"Core Management":"सिस्टम प्रबंधन"}</Link><Link className="secondary" href="/super-admin/registrations">{en?"Registrations":"नए रजिस्ट्रेशन"} ({registrationCount})</Link><form action="/api/auth/logout" method="post"><button className="secondary" type="submit">{en?"Log out":"लॉगआउट"}</button></form></div></header>
+ return <main className="admin-portal"><div className="admin-portal-bar"><strong>SITE SEVA · COMPANY ADMIN</strong><nav><Link href="/super-admin">Dashboard</Link><Link href="/super-admin/management">Super Admin Management</Link><Link href="/super-admin/registrations">Registrations</Link><form action="/api/auth/logout" method="post"><button type="submit">Log out</button></form></nav></div><div className="dashboard-shell">
+ <header className="dashboard-header"><div><div className="eyebrow">SITE SEVA · COMPANY CONTROL</div><h1>{en?"Welcome":"नमस्ते"}, {user.displayName}</h1><p>Company Super Admin Dashboard</p></div><div className="hero-actions"><Link className="secondary" href="/super-admin/management">{en?"Super Admin Management":"सुपर एडमिन प्रबंधन"}</Link><Link className="secondary" href="/super-admin/registrations">{en?"Registrations":"नए रजिस्ट्रेशन"} ({registrationCount})</Link><form action="/api/auth/logout" method="post"><button className="secondary" type="submit">{en?"Log out":"लॉगआउट"}</button></form></div></header>
  <section className="stat-grid"><article className="stat-card"><span>{en?"Pending machinery":"लंबित मशीनरी"}</span><strong>{totals.listings}</strong></article><article className="stat-card"><span>{en?"Pending tenders":"लंबित टेंडर"}</span><strong>{totals.tenders}</strong></article><article className="stat-card"><span>{en?"Pending workers":"लंबित वर्कर"}</span><strong>{totals.workers}</strong></article><article className="stat-card"><span>{en?"Recorded site days":"साइट पर दर्ज दिन"}</span><strong>{totals.workDays}</strong></article></section>
  <section className="panel"><div className="section-heading"><div><div className="eyebrow">{en?"Site operations report":"साइट ऑपरेशन रिपोर्ट"}</div><h2>{en?"Overall operation statistics":"कुल संचालन आँकड़े"}</h2></div></div><div className="stat-grid report-grid"><article className="stat-card"><span>{en?"Running hours":"रनिंग घंटे"}</span><strong>{totals.runningHours.toLocaleString("en-IN")}</strong></article><article className="stat-card"><span>{en?"Diesel (litres)":"डीजल (लीटर)"}</span><strong>{totals.diesel.toLocaleString("en-IN")}</strong></article><article className="stat-card"><span>{en?"Breakdown hours":"ब्रेकडाउन घंटे"}</span><strong>{totals.breakdown.toLocaleString("en-IN")}</strong></article></div></section>
  <ModerationQueue items={items} language={language}/>
  <section className="panel"><div className="eyebrow">{en?"Account security":"अकाउंट सुरक्षा"}</div><h2>{en?"Secure Super Admin access":"सुरक्षित Super Admin प्रवेश"}</h2><p>{en?"This panel is available only to accounts with the SUPER_ADMIN role and MFA enabled. Every approval or rejection is recorded in the audit log.":"यह पैनल केवल SUPER_ADMIN भूमिका और MFA-सक्रिय खाते के लिए उपलब्ध है। हर अनुमोदन/अस्वीकृति ऑडिट लॉग में दर्ज होती है।"}</p></section>
- </div><SiteFooter/><MobileNavigation/></main>;
+ </div></main>;
 }
