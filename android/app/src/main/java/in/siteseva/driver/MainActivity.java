@@ -9,6 +9,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.CookieManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +34,9 @@ public class MainActivity extends Activity {
         webView = new WebView(this);
         webView.setBackgroundColor(Color.WHITE);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLoadsImagesAutomatically(true);
+        webView.getSettings().setUserAgentString(webView.getSettings().getUserAgentString() + " SiteSevaAndroid/0.3.0");
+        CookieManager.getInstance().setAcceptCookie(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setSupportMultipleWindows(false);
@@ -44,8 +50,18 @@ public class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                // Keep all navigation inside the app; do not launch Chrome or another browser.
-                return false;
+                // SiteSeva pages stay inside this native app. Only third-party links open externally.
+                Uri uri = request.getUrl();
+                String host = uri.getHost();
+                if ("https".equals(uri.getScheme()) && host != null &&
+                    (host.equals("siteseva-platform-git-launch-foundation-siteseva.vercel.app") ||
+                     (host.endsWith(".vercel.app") && host.startsWith("siteseva-platform-")))) {
+                    return false;
+                }
+                if ("https".equals(uri.getScheme()) || "http".equals(uri.getScheme())) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                }
+                return true;
             }
 
             @Override
