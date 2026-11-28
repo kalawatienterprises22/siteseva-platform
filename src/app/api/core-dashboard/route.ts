@@ -28,7 +28,7 @@ export async function GET(request:NextRequest){
    await c.query("COMMIT"); return NextResponse.json({assignments:assignments.rows,tenders:tenders.rows,workLogs:logs.rows},{headers:{"Cache-Control":"no-store"}});
   }
   const [profile,assignments,entries]=await Promise.all([
-   c.query("SELECT full_name,worker_type,preferred_language,voice_assistance_enabled,verification_status FROM worker_profiles WHERE user_id=$1",[user.id]),
+   c.query("SELECT full_name,worker_type,phone,experience_years,skills,service_area,verification_status FROM worker_profiles WHERE user_id=$1",[user.id]),
    c.query("SELECT a.id,a.site_name,a.site_location,a.status,a.starts_at,a.ends_at,l.title AS machine_title,l.category,l.make,l.model FROM machine_assignments a JOIN marketplace_listings l ON l.id=a.machine_listing_id WHERE a.driver_user_id=$1 AND a.status IN ('ACTIVE','PLANNED') ORDER BY a.starts_at DESC LIMIT 30",[user.id]),
    c.query("SELECT e.id,e.assignment_id,e.entry_type,e.entry_at,e.numeric_value,e.notes,e.approval_status,e.review_note FROM driver_activity_entries e WHERE e.driver_user_id=$1 ORDER BY e.entry_at DESC LIMIT 30",[user.id])
   ]);
